@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "github-actions-test"
+version = "0.1.0"
+description = ""
+authors = ["shimoe <shimomatsubae@takumi-robo.com>"]
+readme = "README.md"
+packages = [{include = "github_actions_test"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flake8 = "^6.0.0"
+mypy = "^1.2.0"
+isort = "^5.12.0"
+numpy = "^1.24.3"
+black = "^23.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
