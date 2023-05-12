@@ -1,12 +1,13 @@
-import numpy as np
+import sum_array
+import numpy
 
 
-def sum_array(vec1, vec2):
-    vec = vec1 + vec2
-    print(vec)
+def main():
+    array = sum_array.sum_array()
+    vec1 = numpy.array([1, 2, 3])
+    vec2 = numpy.array([4, 5, 6])
+    array.sum_arrays(vec1=vec1, vec2=vec2)
 
 
 if __name__ == "__main__":
-    vec1 = np.array([1, 2, 3])
-    vec2 = np.array([4, 5, 6])
-    sum_array(vec1, vec2)
+    main()
