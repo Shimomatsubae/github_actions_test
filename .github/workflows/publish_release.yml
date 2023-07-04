@@ -24,7 +24,7 @@ jobs:
       - name: Commit updates
         uses: EndBug/add-and-commit@v7
         with:
-          branch: "*/release"
+          branch: "TEST/release"
           message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
           add: "['./version.yaml']"
 
