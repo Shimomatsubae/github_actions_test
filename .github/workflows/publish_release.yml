@@ -30,6 +30,6 @@ jobs:
 
       - name: Tag update
         run: |
-          git tag -d ${steps.get_version.outputs.LATEST_VERSION}
-          git tag ${steps.get_version.outputs.LATEST_VERSION}
+          git tag -d ${{steps.get_version.outputs.LATEST_VERSION}}
+          git tag ${{steps.get_version.outputs.LATEST_VERSION}}
           
