@@ -19,7 +19,7 @@ jobs:
 
       - name: Update version.yaml
         run: |
-          sed -e "s/VERSION: '\(.*\)',/VERSION: '${{ steps.get_version.outputs.VERSION_NUM }}',/" src/global.js > tmpfile && mv tmpfile src/global.js
+          sed -e "s/VERSION: '\(.*\)',/VERSION: '${{ steps.get_version.outputs.VERSION_NUM }}',/" version.yaml > tmpfile && mv tmpfile version.yaml
 
       - name: Commit updates
         uses: EndBug/add-and-commit@v7
