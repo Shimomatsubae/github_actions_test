@@ -15,9 +15,9 @@ jobs:
           LATEST_VERSION=$(git tag --sort=-creatordate | head -1)
           VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
           CURRENT_BRANCH=$(git branch --show-current)
-          echo "{LATEST_VERSION}={$LATEST_VERSION} >> $GITHUB_OUTPUT
-          echo "{VERSION_NUM}={$VERSION_NUM} >> $GITHUB_OUTPUT
-          echo "{CURRENT_BRANCH}={$CURRENT_BRANCH} >> $GITHUB_OUTPUT
+          echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
+          echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
+          echo "{CURRENT_BRANCH}={$CURRENT_BRANCH}" >> $GITHUB_OUTPUT
 
       - name: Update version.yaml
         run: |
