@@ -14,8 +14,8 @@ jobs:
         run: |
           LATEST_VERSION=$(git tag --sort=-creatordate | head -1)
           VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
-          echo ::set-output name=LATEST_VERSION::$LATEST_VERSION
-          echo ::set-output name=VERSION_NUM::$VERSION_NUM
+          echo "{LATEST_VERSION}={$LATEST_VERSION} >> $GITHUB_OUTPUT
+          echo "{VERSION_NUM}={$VERSION_NUM} >> $GITHUB_OUTPUT
 
       - name: Update version.yaml
         run: |
