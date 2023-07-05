@@ -14,7 +14,8 @@ jobs:
       - name: タグ名を取得する
         id: get_tag_name
         run: |
-          TAG_NAME=${sed -e "s/refs\/tags\///g" ${{github.ref}}}
+          GITHUB_REF="${{github.ref}}"
+          TAG_NAME=$(echo $GITHUB_REF | sed -e "s/refs\/tags\///g" $1)
           echo "{TAG_NAME}={$TAG_NAME}" >> $GITHUB_OUTPUT
 
       - name: リリースドラフトの作成
@@ -23,5 +24,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.get_tag_name.outputs.TAG_NAME }}
-          release_name: Release ${{ steps.get_tag_name.outputs.tag_name }}
+          release_name: Release ${{ steps.get_tag_name.outputs.TAG_NAME }}
           draft: true
