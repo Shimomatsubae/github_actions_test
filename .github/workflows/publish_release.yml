@@ -22,15 +22,10 @@ jobs:
           sed -e "s/VERSION: \[.*\]/VERSION: \[${{ steps.get_version.outputs.VERSION_NUM }}\]/" version.yaml > tmpfile && mv tmpfile version.yaml
 
       - name: Commit updates
-        run: | 
-          git add ./version.yaml
-          git config --local user.email "shimomatsubae@takumi-robo.com"
-          git config --local user.name "shimoe"
-          git commit -am "Update version.yaml"
-
-      - name: Tag update
-        run: |
-          git tag -d ${{steps.get_version.outputs.LATEST_VERSION}}
-          git tag ${{steps.get_version.outputs.LATEST_VERSION}}
-          git push --tags
-          
+        uses: EndBug/add-and-commit@v7
+        with:
+          branch: master
+          message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
+          tag: '${{ steps.get_version.outputs.LATEST_VERSION }} --force'
+          tag_push: '--force'
+          add: "['version.yaml']"          
