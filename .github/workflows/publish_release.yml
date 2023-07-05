@@ -12,7 +12,7 @@ jobs:
       - name: Get latest version
         id: get_version
         run: |
-          LATEST_VERSION=$(git tag --sort=-creatordate | head -1)
+          LATEST_VERSION=${{ github.event.release.tag_name }}
           VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
           echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
           echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
@@ -24,7 +24,6 @@ jobs:
       - name: Commit updates
         uses: EndBug/add-and-commit@v7
         with:
-          branch: master
           message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
           tag: '${{ steps.get_version.outputs.LATEST_VERSION }} --force'
           tag_push: '--force'
