@@ -24,6 +24,8 @@ jobs:
       - name: Commit updates
         run: | 
           git add ./version.yaml
+          git config --local user.email "shimomatsubae@takumi-robo.com"
+          git config --local user.name "shimoe"
           git commit -am "Update version.yaml"
 
       - name: Tag update

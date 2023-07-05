@@ -1,0 +1,25 @@
+name: リリースドラフトの作成
+
+on:
+  pull_request:
+    branches:
+      - "**/release"
+
+jobs:
+  create-release-draft:
+    runs-on: ubuntu-latest
+    
+
+    steps:
+      - name: タグ名を取得する
+        id: get_tag_name
+        run: echo "{TAG_NAME} = {${{ github.ref }}}" >> $GITHUB_OUTPUT
+
+      - name: リリースドラフトの作成
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_tag_name.outputs.TAG_NAME.replace('refs/tags/', '') }}
+          release_name: Release ${{ steps.get_tag_name.outputs.tag_name.replace('refs/tags/', '') }}
+          draft: true
