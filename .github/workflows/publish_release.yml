@@ -16,7 +16,6 @@ jobs:
           VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
           echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
           echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
-          echo "{TAG_NAME}={${{ github.ref }}}" >> $TAG_NAME
 
       - name: Update version.yaml
         run: |
@@ -25,6 +24,8 @@ jobs:
       - name: Commit updates
         run: | 
           git add ./version.yaml
+          git config --local user.email "shimomatsubae@takumi-robo.com"
+          git config --local user.name "shimoe"
           git commit -am "Update version.yaml"
 
       - name: Tag update
