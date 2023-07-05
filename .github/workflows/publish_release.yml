@@ -14,17 +14,29 @@ jobs:
         run: |
           LATEST_VERSION=${{ github.event.release.tag_name }}
           VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
+          RELEASE_BRANCH=${{ github.ref_name.branch }}
+          echo $LATEST_VERSION
+          echo $VERSION_NUM
+          echo $RELEASE_BRANCH
           echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
           echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
+          echo "{RELEASE_BRANCH}={$RELEASE_BRANCH}" >> $GITHUB_OUTPUT
 
       - name: Update version.yaml
         id: update_version_file
         run: |
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
           sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM \]/" version.yaml > tmpfile && mv tmpfile version.yaml
-          git add ./version.yaml
-          git config --local user.email "shimomatsubae@takumi-robo.com"
-          git config --local user.name "shimoe"
-          git commit -m "バージョン情報更新 $VERSION_NUM"
-          git tag ${{ github.event.release.tag_name }} --force
-          git push --tags --force
+        # git add ./version.yaml
+        # git config --local user.email "${{ github.event.release.user.email}}"
+        # git config --local user.name "${{ github.event.release.user.name}}"
+        # git commit -m "バージョン情報更新 $VERSION_NUM"
+        # git tag ${{ github.event.release.tag_name }} --force
+        # git push --tags --force
+
+      - name: Commit updates
+        uses: EndBug/add-and-commit@v7
+        with:
+          branch: ${{ steps.get_version.outputs.RELEASE_BRANCH }}
+          message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
+          add: "['./version.yaml']"
