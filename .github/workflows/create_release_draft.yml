@@ -2,41 +2,25 @@ name: リリースドラフトの作成
 
 on:
   pull_request:
+    types: [closed]
     branches:
       - '**/release'
 
 jobs:
   create-release-draft:
     runs-on: ubuntu-latest
-    
 
-    steps:
-      - name: タグ名を取得する
-        id: get_tag_name
-        run: |
-          GITHUB_REF="${{github.ref}}"
-          TAG_NUMBER=$(echo $GITHUB_REF | sed -e "s/refs\/tags\///g" $1)
-          echo "{TAG_NUMBER}={$TAG_NUMBER}" >> $GITHUB_OUTPUT
-
-      - name: ブランチ名を取得する
-        id: get_branch_name
-        run: echo "::set-output name=branch_name::${{ github.head_ref }}"
-          
-      - name: ブランチ名のチェック
-        run: |
-          if [[ "${{ steps.get_branch_name.outputs.branch_name }}" =~ \/release$ ]]; then
-            echo "Branch name is valid"
-          else
-            echo "${{ steps.get_branch_name.outputs.branch_name }}"
-            echo "Invalid branch name. Exiting..."
-            exit 1
-          fi
-
+    steps:          
+      - name: Checkout code
+        uses: actions/checkout@master
+      
       - name: リリースドラフトの作成
+        id: create_release  
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.get_tag_name.outputs.TAG_NUMBER }}
-          release_name: Release ${{ steps.get_tag_name.outputs.TAG_NUMBER }}
+          tag_name: ${{ github.event.pull_request.title }}
+          release_name: ${{ github.event.pull_request.title }}
+          body: ${{ github.event.pull_request.body }}
           draft: true
