@@ -34,9 +34,19 @@ jobs:
         # git tag ${{ github.event.release.tag_name }} --force
         # git push --tags --force
 
-      - name: Commit updates
-        uses: EndBug/add-and-commit@v7
+      # - name: Commit updates
+      #   uses: EndBug/add-and-commit@v7
+      #   with:
+      #     branch: ${{ steps.get_version.outputs.RELEASE_BRANCH }}
+      #     message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
+      #     add: "['./version.yaml']"
+
+      - name: Find Latest Release Branch
+        id: release-branch-finder
+        uses: jsryudev/release-branch-finder@v0.1.0
         with:
-          branch: ${{ steps.get_version.outputs.RELEASE_BRANCH }}
-          message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
-          add: "['./version.yaml']"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-branch-prefix: release
+
+      - name: Echo Latest Release Branch
+        run: echo "${{ steps.release-branch-finder.outputs.release-branch }}"
