@@ -27,6 +27,7 @@ jobs:
           if [[ "${{ steps.get_branch_name.outputs.branch_name }}" =~ \/release$ ]]; then
             echo "Branch name is valid"
           else
+            echo "${{ steps.get_branch_name.outputs.branch_name }}"
             echo "Invalid branch name. Exiting..."
             exit 1
           fi
