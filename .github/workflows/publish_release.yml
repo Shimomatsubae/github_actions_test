@@ -27,4 +27,4 @@ jobs:
           git config --local user.name "shimoe"
           git commit -m "バージョン情報更新 $VERSION_NUM"
           git tag ${{ github.event.release.tag_name }} --force
-          git push --tags
+          git push --tags --force
