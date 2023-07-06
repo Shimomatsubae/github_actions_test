@@ -46,3 +46,4 @@ jobs:
           git config --local user.email "github-actions"
           git config --local user.name "github-actions@github.com"
           git commit -m "バージョン情報更新 $VERSION_NUM"
+          git push origin ${{ github.head_ref }}
