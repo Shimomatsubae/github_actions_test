@@ -41,7 +41,7 @@ jobs:
         id: update_version_file
         run: |
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
-          git checkout ${{ github.ref_name }}
+          git checkout ${{ github.base_ref }}
           sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM $VERSION_VAR \]/" version.yaml > tmpfile && mv tmpfile version.yaml
           git add ./version.yaml
           git config --local user.email "github-actions"
