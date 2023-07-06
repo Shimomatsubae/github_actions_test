@@ -18,7 +18,7 @@ jobs:
           echo $VERSION_VAR
           echo $LATEST_VERSION
           echo $VERSION_NUM
-          if [[$VERSION_VAR =~ ^[A-Z]+$]]
+          if [[ $VERSION_VAR =~ ^[A-Z]+$ ]]
           then
             echo "{VERSION_VAR}={,$VERSION_VAR}" >> $GITHUB_OUTPUT
           else
@@ -31,6 +31,7 @@ jobs:
         id: update_version_file
         run: |
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
+          VERSION_VAR=${{ steps.get_version.outputs.VERSION_VAR }}
           sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM $VERSION_VAR \]/" version.yaml > tmpfile && mv tmpfile version.yaml
           git add ./version.yaml
         # git config --local user.email "github-actions"
