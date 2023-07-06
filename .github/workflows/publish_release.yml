@@ -1,7 +1,7 @@
 name: "Publish release"
 on:
-  release:
-    types: [published]
+  pull_request:
+    types: [opened, edited, synchronize]
 
 jobs:
   build:
@@ -12,41 +12,39 @@ jobs:
       - name: Get latest version
         id: get_version
         run: |
-          LATEST_VERSION=${{ github.event.release.tag_name }}
-          VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///")
-          RELEASE_BRANCH=${{ github.ref_name.branch }}
+          LATEST_VERSION=${{ github.event.pull_request.title }}
+          VERSION_VAR=$(echo $LATEST_VERSION | sed -e "s/[^\/]*\///" $1 | sed -e "s/\/.*$//" $1)
+          VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\///" | sed -e "s/\./,/g")
+          echo $VERSION_VAR
           echo $LATEST_VERSION
           echo $VERSION_NUM
-          echo $RELEASE_BRANCH
-          echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
-          echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
-          echo "{RELEASE_BRANCH}={$RELEASE_BRANCH}" >> $GITHUB_OUTPUT
+          if [[ $VERSION_VAR =~ ^[A-Z]+$ ]]
+          then
+            VERSION_VAR=$(echo $LATEST_VERSION | sed -e "s/[^\/]*\///" $1 | sed -e "s/\/.*$//" $1 | sed -e "s/^/,/g")
+            echo "CORRECT variation style"
+            echo "VERSION_VAR=$VERSION_VAR" >> $GITHUB_OUTPUT
+          else
+            echo "variation is not found"
+            echo "VERSION_VAR=" >> $GITHUB_OUTPUT
+          fi
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION_NUM=$VERSION_NUM" >> $GITHUB_OUTPUT
 
       - name: Update version.yaml
         id: update_version_file
         run: |
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
-          sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM \]/" version.yaml > tmpfile && mv tmpfile version.yaml
-        # git add ./version.yaml
-        # git config --local user.email "${{ github.event.release.user.email}}"
-        # git config --local user.name "${{ github.event.release.user.name}}"
+          VERSION_VAR=${{ steps.get_version.outputs.VERSION_VAR }}
+          sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM $VERSION_VAR \]/" version.yaml > tmpfile && mv tmpfile version.yaml
+          git add ./version.yaml
+        # git config --local user.email "github-actions"
+        # git config --local user.name "github-actions@github.com"
         # git commit -m "バージョン情報更新 $VERSION_NUM"
-        # git tag ${{ github.event.release.tag_name }} --force
-        # git push --tags --force
+        # git push origin ${{ github.head_ref }}
 
-      # - name: Commit updates
-      #   uses: EndBug/add-and-commit@v7
-      #   with:
-      #     branch: ${{ steps.get_version.outputs.RELEASE_BRANCH }}
-      #     message: "Bump version: ${{ steps.get_version.outputs.LATEST_VERSION }}"
-      #     add: "['./version.yaml']"
-
-      - name: Find Latest Release Branch
-        id: release-branch-finder
-        uses: jsryudev/release-branch-finder@v0.1.0
+      - name: Auto commit
+        id: auto_commit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-branch-prefix: '**/release'
-
-      - name: Echo Latest Release Branch
-        run: echo "${{ steps.release-branch-finder.outputs.release-branch }}"
+          commit_message: バージョン情報更新
+          
