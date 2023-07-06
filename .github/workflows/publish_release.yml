@@ -27,16 +27,6 @@ jobs:
           echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
           echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
 
-      - name: Get latest version
-        id: get_subversion
-        run: |
-          LATEST_VERSION=${{ github.event.pull_request.title }}
-          VERSION_NUM=$(echo $LATEST_VERSION | sed -e "s/^.*\/.*//")
-          echo $LATEST_VERSION
-          echo $VERSION_NUM
-          echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
-          echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
-
       - name: Update version.yaml
         id: update_version_file
         run: |
