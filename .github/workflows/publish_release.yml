@@ -20,13 +20,15 @@ jobs:
           echo $VERSION_NUM
           if [[ $VERSION_VAR =~ ^[A-Z]+$ ]]
           then
-            echo "{VERSION_VAR}={,$VERSION_VAR}" >> $GITHUB_OUTPUT
+            VERSION_VAR=$(echo $LATEST_VERSION | sed -e "s/[^\/]*\///" $1 | sed -e "s/\/.*$//" $1 | sed -e "s/^/,/g")
+            echo "CORRECT variation style"
+            echo "VERSION_VAR=$VERSION_VAR" >> $GITHUB_OUTPUT
           else
-            echo "{VERSION_VAR}={}" >> $GITHUB_OUTPUT
+            echo "variation is not found"
+            echo "VERSION_VAR=" >> $GITHUB_OUTPUT
           fi
-          echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
-          echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION_NUM=$VERSION_NUM" >> $GITHUB_OUTPUT
 
       - name: Update version.yaml
         id: update_version_file
