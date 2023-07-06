@@ -43,7 +43,14 @@ jobs:
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
           sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM $VERSION_VAR \]/" version.yaml > tmpfile && mv tmpfile version.yaml
           git add ./version.yaml
-          git config --local user.email "github-actions"
-          git config --local user.name "github-actions@github.com"
-          git commit -m "バージョン情報更新 $VERSION_NUM"
-          git push origin ${{ github.head_ref }}
+        # git config --local user.email "github-actions"
+        # git config --local user.name "github-actions@github.com"
+        # git commit -m "バージョン情報更新 $VERSION_NUM"
+        # git push origin ${{ github.head_ref }}
+
+      - name: Auto commit
+        id: auto_commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: バージョン情報更新
+          
