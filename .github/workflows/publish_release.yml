@@ -26,6 +26,7 @@ jobs:
           fi
           echo "{LATEST_VERSION}={$LATEST_VERSION}" >> $GITHUB_OUTPUT
           echo "{VERSION_NUM}={$VERSION_NUM}" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
       - name: Update version.yaml
         id: update_version_file
