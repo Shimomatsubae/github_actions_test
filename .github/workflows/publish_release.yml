@@ -1,7 +1,7 @@
 name: "Publish release"
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, synchronize]
 
 jobs:
   build:
@@ -41,10 +41,8 @@ jobs:
         id: update_version_file
         run: |
           VERSION_NUM=${{ steps.get_version.outputs.VERSION_NUM }}
-          git checkout ${{ github.base_ref }}
           sed -e "s/VERSION: \[.*\]/VERSION: \[ $VERSION_NUM $VERSION_VAR \]/" version.yaml > tmpfile && mv tmpfile version.yaml
           git add ./version.yaml
           git config --local user.email "github-actions"
           git config --local user.name "github-actions@github.com"
           git commit -m "バージョン情報更新 $VERSION_NUM"
-          git push
